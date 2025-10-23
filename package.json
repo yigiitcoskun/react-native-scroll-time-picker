@@ -1,0 +1,24 @@
+{
+  "name": "react-native-time-scroll-picker",
+  "version": "1.0.0",
+  "description": "A customizable scroll-based time picker modal for React Native",
+  "main": "index.js",
+  "types": "src/TimePickerModal.tsx",
+  "keywords": [
+    "react-native",
+    "timepicker",
+    "scroll-picker",
+    "modal",
+    "react"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yigiitcoskun/react-native-scroll-time-picker.git"
+  },
+  "author": "Mustafa Yiğit Coşkun",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-native": ">=0.70.0"
+  }
+}
