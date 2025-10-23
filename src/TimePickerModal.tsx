@@ -10,8 +10,6 @@ import {
     Dimensions
 } from 'react-native';
 
-
-// Ekran boyutuna göre duyarlı değer hesaplama (Kütüphane içinde kalması gerekir)
 const getResponsiveValue = (baseValue: number): number => {
     const scaleFactor = width / 375;
     return baseValue * scaleFactor;
@@ -20,13 +18,13 @@ const getResponsiveValue = (baseValue: number): number => {
 
 const { width } = Dimensions.get('window');
 
-// Bileşen için prop tanımları
+
 interface TimePickerModalProps {
     title: string;
-    value: string; // Örn: "14:30"
-    onTimeChange: (time: string) => void; // Onaylandığında çağrılır
+    value: string;
+    onTimeChange: (time: string) => void;
     error?: string;
-    placeholder?: string; // İsteğe bağlı
+    placeholder?: string;
 }
 
 const TimePickerModal: React.FC<TimePickerModalProps> = ({
@@ -34,15 +32,13 @@ const TimePickerModal: React.FC<TimePickerModalProps> = ({
     value,
     onTimeChange,
     error,
-    placeholder = "00:00", // Varsayılan placeholder
+    placeholder = "00:00",
 }) => {
     const [visible, setVisible] = useState(false);
 
-    // Responsive değerler
     const itemHeight:any = Platform.select({ ios: getResponsiveValue(40), android: getResponsiveValue(45) });
     const visibleItems = 5;
 
-    // Saat ve dakika listelerini oluşturma
     const generateList = (type: "hour" | "minute"): string[] => {
         const max = type === "hour" ? 24 : 60;
         const list: string[] = [];
@@ -57,14 +53,13 @@ const TimePickerModal: React.FC<TimePickerModalProps> = ({
     const hours = useMemo(() => generateList("hour"), []);
     const minutes = useMemo(() => generateList("minute"), []);
 
-    // Bileşenin kendi iç state'i (MobX yerine)
+
     const [selectedHour, setSelectedHour] = useState("00");
     const [selectedMinute, setSelectedMinute] = useState("00");
 
     const hourScrollViewRef = useRef<ScrollView>(null);
     const minuteScrollViewRef = useRef<ScrollView>(null);
 
-    // Scroll durduğunda seçilen değeri belirler
     const handleMomentumScrollEnd = (event: any, type: "hour" | "minute") => {
         const offsetY = event.nativeEvent.contentOffset.y;
         const index = Math.round(offsetY / itemHeight);
@@ -82,20 +77,17 @@ const TimePickerModal: React.FC<TimePickerModalProps> = ({
         }
     };
 
-    // Modal açıldığında (visible değiştiğinde) mevcut değeri ayarlar ve scroll'u konumlandırır
     useEffect(() => {
         if (visible) {
-            // Mevcut değeri al ve state'e set et
+
             const [hour, minute] = (value || "00:00").split(":");
             setSelectedHour(hour);
             setSelectedMinute(minute);
 
-            // Scroll pozisyonlarını ayarla
             const scrollToPositions = () => {
                 const hourIndex = hours.indexOf(hour);
                 const minuteIndex = minutes.indexOf(minute);
                 
-                // Güvenli kontrol (index -1 ise 0'a çek)
                 const finalHourIndex = hourIndex === -1 ? 0 : hourIndex;
                 const finalMinuteIndex = minuteIndex === -1 ? 0 : minuteIndex;
 
@@ -109,16 +101,14 @@ const TimePickerModal: React.FC<TimePickerModalProps> = ({
                 });
             };
 
-            // ScrollView'in render edilmesini beklemek için timeout kullanıyoruz.
             const timeout = Platform.OS === 'android' ? 500 : 100;
             setTimeout(scrollToPositions, timeout);
         }
     }, [visible, value, hours, minutes, itemHeight]);
 
-    // Onay butonu işleyicisi (En önemli değişiklik burada)
     const handleConfirm = () => {
         const time = `${selectedHour}:${selectedMinute}`;
-        onTimeChange(time); // Dışarıdan gelen callback'i çağır
+        onTimeChange(time);
         setVisible(false);
     };
 
@@ -126,13 +116,11 @@ const TimePickerModal: React.FC<TimePickerModalProps> = ({
         setVisible(false);
     }
     
-    // Android Scroll işleyicisi (momentum scroll end ile entegre)
     const handleScroll = (event: any, type: "hour" | "minute") => {
         if (Platform.OS === 'android') {
             // Android'de eğer onMomentumScrollEnd bazen çalışmazsa,
             // onScroll ile de scroll pozisyonunu yakalamak isteyebilirsiniz.
             // Ancak snapToInterval + onMomentumScrollEnd genellikle yeterlidir.
-            // Orijinal kodunuzda olduğu gibi bırakıyorum:
             handleMomentumScrollEnd(event, type);
         }
     };
@@ -166,18 +154,17 @@ const TimePickerModal: React.FC<TimePickerModalProps> = ({
                 <TouchableOpacity
                     style={styles.modalOverlay}
                     activeOpacity={1}
-                    onPress={handleCancel} // Overlay'e tıklanınca kapatma
+                    onPress={handleCancel}
                 >
                     <TouchableOpacity
                         style={styles.modalContentContainer}
-                        activeOpacity={1} // İçeriğe tıklamayı engelle
+                        activeOpacity={1}
                     >
                         <View style={styles.modalContainer}>
                             <Text style={styles.modalTitle}>{title}</Text>
 
                             <View style={styles.timePickerContainer}>
                                 <View style={styles.selectionOverlay}>
-                                    {/* itemHeight'i dinamik olarak verdik */}
                                     <View style={[styles.selectionLine, { height: itemHeight }]} />
                                 </View>
                                 <ScrollView
@@ -267,8 +254,6 @@ const TimePickerModal: React.FC<TimePickerModalProps> = ({
 };
 
 export default TimePickerModal;
-
-// Stil Tanımları
 const styles = StyleSheet.create({
     sectionContainer: {
         marginVertical: getResponsiveValue(10),
@@ -316,8 +301,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     modalContentContainer: {
-        // Modalın içeriğine tıklandığında overlay'in kapanmasını engellemek için.
-        // Sadece modalContainer boyutunda dokunma alanını korur.
         maxWidth: '90%', 
     },
     modalContainer: {
@@ -349,7 +332,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         paddingVertical: getResponsiveValue(20),
-        position: 'relative', // selectionOverlay için
+        position: 'relative',
     },
     selectionOverlay: {
         position: 'absolute',
@@ -359,10 +342,10 @@ const styles = StyleSheet.create({
         bottom: 0,
         justifyContent: 'center',
         alignItems: 'center',
-        pointerEvents: 'none', // Dokunma olaylarını engeller
+        pointerEvents: 'none',
     },
     selectionLine: {
-        width: '80%', // ScrollView'leri kaplaması için
+        width: '80%',
         borderTopWidth: 1,
         borderBottomWidth: 1,
         borderColor: '#ddd',
