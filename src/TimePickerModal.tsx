@@ -235,13 +235,13 @@ const TimePickerModal: React.FC<TimePickerModalProps> = ({
                                     onPress={handleCancel}
                                     style={[styles.button, styles.cancelButton]}
                                 >
-                                    <Text style={styles.cancelButtonText}>İptal</Text>
+                                    <Text style={styles.cancelButtonText}>Cancel</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     onPress={handleConfirm}
                                     style={[styles.button, styles.confirmButton]}
                                 >
-                                    <Text style={styles.confirmButtonText}>Onayla</Text>
+                                    <Text style={styles.confirmButtonText}>Confirm</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
