@@ -13,7 +13,6 @@ This component allows users to smoothly select hours and minutes by scrolling, j
 - 🧩 No third-party dependencies  
 - 🌙 Works on both iOS and Android  
 - ⚡ Responsive layout with dynamic sizing  
-- 💬 Localized labels (e.g., "İptal" / "Onayla")
 
 ---
 
